@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'Shop/style.css' %}">  
+    <script
+        src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous">
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <Form class="card card-sm">
+                    <div class="card-body row no-gutters align-item-center">
+                        <div class="col">
+                            <input type="search" name="ItemName" placeholder="Search for product" class="form-control form-control-borderless">
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-success" type="submit">Search</button>
+                        </div>
+                    </div>
+                </Form>
+            </div>
+        </div>
+        <div class="row"> 
+            {% for product in Product_object %}
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card">
+                        <img src="{{ product.Image }}" class="card-img-top">
+                        <div class="card-body">
+                            <div class="card-title">
+                                {{ product.Title }}
+                            </div>
+                            <div class="card-text">
+                                {{product.Price}}
+                            </div>
+                        
+                            <a href="/{{ product.id }}" class="btn btn-warning">View</a>
+                            <button id="{{ product.id }}" class="btn act btn-warning">Add to Cart</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div class="col-md-3 offset-md-5">
+                <ul class="pagination">
+                    {% if Product_object.has_previous %}
+                        <li class="page_item">
+                            <a class="page-link" href="?page={{ Product_object.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <a class="page-link" href="?page={{ Product_object.number }}">Current</a>
+                    </li>
+
+                    {% if Product_object.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ Product_object.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    console.log("This is working")
+    if(localStorage.getItem('cart')){
+        var cart = {};
+    }
+    else{
+        cart = JSON.parse(localStorage.getItem('cart'));
+    }
+    $(document).on('click','.act', function(){
+        console.log("This on click func");
+        var item_id = this.id.toString();
+        console.log(item_id);
+
+        if(cart[item_id]!=undefined){
+        cart[item_id]=cart[item_id] + 1;
+        }
+        else{
+            cart[item_id]=1;
+        }
+        console.log(cart);
+        localStorage.setItem('cart',JSON.stringify(cart));    
+    });
+
+
+    </script>
+</html>
+
